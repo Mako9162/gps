@@ -5,7 +5,7 @@ function verifyToken(req, res, next) {
         req.token = bearerToken
         next()
     }else{
-       res.send('Sin Token')
+       res.status(403).send('Sin Token')
     }
 };
 

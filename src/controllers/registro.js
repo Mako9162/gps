@@ -10,7 +10,7 @@ function regidController(req, res) {
 
     jwt.verify(req.token, "smvssmvs", (err) => {
         if(err){
-            res.send('Token no valido');
+            res.status(403).send('Token no valido');
         }else{
             db.query(sql, (error, result) => {
                 if (error) throw error;
@@ -59,18 +59,18 @@ function regController( req, res) {
         if (result.length > 0){
             jwt.verify(req.token, "smvssmvs", (err) => {
                 if(err){
-                    res.send('Token no valido');
+                    res.status(403).send('Token no valido');
                 }else{
         
                     db.query(sql, customerObj, error => {
                         if (error) throw error; 
-                        console.log(customerObj);
+                        //console.log(customerObj);
                         res.status(200).send('Guardado correctamente !');
                     });
                 }
             });
         }else{
-            console.log(`El Movil id: "${vehi}", no esta ingresado`);
+            //console.log(`El Movil id: "${vehi}", no esta ingresado`);
             res.status(404).send(`El Movil id: "${vehi}", no esta ingresado`);
         }
     });

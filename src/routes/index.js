@@ -23,7 +23,7 @@ router.post('/login', (req, res) => {
 router.post('/post', pass, (req, res) => {
     jwt.verify(req.token, "smvssmvs", (err, authData) => {
         if(err){
-            res.send('Token no valido');
+            res.status(403).send('Token no valido');
         }else{
             res.json({
                 message:"Token Valido",
