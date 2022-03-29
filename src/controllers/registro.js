@@ -28,53 +28,115 @@ function regidController(req, res) {
 
 function regController( req, res) {
     
-    const sql = 'INSERT INTO registro SET ?';
+   const patente = req.body.patente;
 
-    const customerObj = {
+   const sql = 'SELECT vehi_id FROM vehiculo WHERE vehi_patente= ?';
 
+   db.query(sql, [patente],(error, result) =>{
+    if (result.length > 0){
         
-        regi_altitud: req.body.regi_altitud,
-        regi_azimut: req.body.regi_azimut,
-        regi_fecha: req.body.regi_fecha,
-        regi_fecha_insercion: req.body.regi_fecha_insercion,
-        regi_fecha_posicion: req.body.regi_fecha_posicion,
-        regi_fecha_recibido: req.body.regi_fecha_recibido,
-        regi_fix: req.body.regi_fix,
-        regi_ignicion: req.body.regi_ignicion,
-        regi_latitud: req.body.regi_latitud,
-        regi_longitud: req.body.regi_longitud,
-        regi_velocidad: req.body.regi_velocidad,
-        regi_vehi_id: req.body.regi_vehi_id
+        const r_patente= JSON.parse(JSON.stringify(result[0].vehi_id));
+
+        jwt.verify(req.token, "smvssmvs", (err) => {
+            if(err){
+                res.status(403).send('Token no valido');
+            }else{
+                
+                const imei = req.body.imei;
+
+                const sql2 = 'SELECT * FROM equipo WHERE equi_vehi_id= ? AND equi_imei= ?'; 
+
+                db.query(sql2,[r_patente, imei], (error, result)=>{
+                    if (result.length > 0){
+
+                    const sql1 = 'INSERT INTO registro SET ?';
+
+                    const customerObj = {
+
+                        regi_altitud: req.body.altitud,
+                        regi_azimut: req.body.azimut,
+                        regi_fecha_posicion: req.body.fechaPos,
+                        regi_fecha_recibido: req.body.fechaEnv,
+                        regi_fix: req.body.fix,
+                        regi_ignicion: req.body.ignicion,
+                        regi_latitud: req.body.latitud,
+                        regi_longitud: req.body.longitud,
+                        regi_velocidad: req.body.velocidad,
+                        regi_vehi_id: r_patente,
+                        regi_avl: req.body.avl,
+                        regi_ori: req.body.orientacion,
+                        regi_volt: req.body.voltaje,
+                        regi_can: req.body.can,
+                        regi_odo: req.body.odometro,
+                        regi_acelerador: req.body.acelerador,
+                        regi_consumo: req.body.consumo,
+                        regi_combustible: req.body.combustible,
+                        regi_horometro: req.body.horometro,
+                        regi_rpm: req.body.rpm,
+                        regi_tempMotor: req.body.tempMotor,
                     
+                    };
+
+                db.query(sql1, customerObj, (error, result) => {
+                    console.log(customerObj);
+                    res.status(200).send('Guardado correctamente !');
+                });
+                    }else{
+                        sql4 = 'INSERT INTO equipo SET ?';
+
+                        const insertimei = {equi_vehi_id: r_patente, equi_imei: imei};
+
+                        db.query(sql4, insertimei, (error, result) => {
+                            
+                        });
+
+                            const sql5 = 'INSERT INTO registro SET ?';
+
+                            const customerObj = {
+
+                                regi_altitud: req.body.altitud,
+                                regi_azimut: req.body.azimut,
+                                regi_fecha_posicion: req.body.fechaPos,
+                                regi_fecha_recibido: req.body.fechaEnv,
+                                regi_fix: req.body.fix,
+                                regi_ignicion: req.body.ignicion,
+                                regi_latitud: req.body.latitud,
+                                regi_longitud: req.body.longitud,
+                                regi_velocidad: req.body.velocidad,
+                                regi_vehi_id: r_patente,
+                                regi_avl: req.body.avl,
+                                regi_ori: req.body.orientacion,
+                                regi_volt: req.body.voltaje,
+                                regi_can: req.body.can,
+                                regi_odo: req.body.odometro,
+                                regi_acelerador: req.body.acelerador,
+                                regi_consumo: req.body.consumo,
+                                regi_combustible: req.body.combustible,
+                                regi_horometro: req.body.horometro,
+                                regi_rpm: req.body.rpm,
+                                regi_tempMotor: req.body.tempMotor,
+                    
+                            };
+
+                            db.query(sql5, customerObj, (error, result) => {
+                                console.log(customerObj);
+                                res.status(200).send('Guardado correctamente !');
+                            });
+
+
+                    };
+                });
+
+            };
+
+        });
+
+    }else{
+        res.status(404).send(`El Movil: ${patente}, no esta registrado`);
     };
 
-
-
-    const vehi =req.body.regi_vehi_id;
-
-    const sql1= `SELECT * FROM vehiculo WHERE vehi_id= ${vehi}` ;
-
-    db.query(sql1, (error, result) => {
-        if (error) throw error;
-        if (result.length > 0){
-            jwt.verify(req.token, "smvssmvs", (err) => {
-                if(err){
-                    res.status(403).send('Token no valido');
-                }else{
-        
-                    db.query(sql, customerObj, error => {
-                        if (error) throw error; 
-                        //console.log(customerObj);
-                        res.status(200).send('Guardado correctamente !');
-                    });
-                }
-            });
-        }else{
-            //console.log(`El Movil id: "${vehi}", no esta ingresado`);
-            res.status(404).send(`El Movil id: "${vehi}", no esta ingresado`);
-        }
     });
-   
+  
 };
 
 module.exports = {

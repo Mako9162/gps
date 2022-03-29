@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 
 const pass = require('../lib/jwt.js');
 const regi = require('../controllers/registro');
+const { rulesToMonitor } = require('nodemon/lib/monitor/match');
 
 //ruta de login que genera el token 
 router.post('/login', (req, res) => {
@@ -37,5 +38,8 @@ router.post('/post', pass, (req, res) => {
 router.get('/registro/:regi_id', pass, regi.regidController);
 router.post('/registro', pass, regi.regController);
 // router.post('/registros', pass, regi.insController);
+
+// ruta de vehiculo
+
 
 module.exports = router;
