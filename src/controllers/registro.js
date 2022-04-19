@@ -61,10 +61,10 @@ function regController( req, res) {
                     const fechaEnvi = moment(fechar, 'YYYY-MM-DD HH:mm:ss', true).isValid();
 
                     if (fechaPosi && fechaEnvi == true){
-                        const pos= new Date(fechap).getTime();
-                        const env= new Date(fechar).getTime();
-                        // console.log(pos);
-                        // console.log(env);
+                        const pos= moment(fechap).unix();
+                        const env= moment(fechar).unix();
+                        console.log(pos);
+                        console.log(env);
 
                     const customerObj = {
 
@@ -119,8 +119,8 @@ function regController( req, res) {
                             const fechaEnvi1 = moment(fechar1, 'YYYY-MM-DD HH:mm:ss', true).isValid();
         
                             if (fechaPosi1 && fechaEnvi1 == true){
-                                const pos1= new Date(fechap1).getTime();
-                                const env1= new Date(fechar1).getTime();
+                                const pos1= moment(fechap1).unix();
+                                const env1= moment(fechar1).unix();
 
                             const customerObj = {
 
