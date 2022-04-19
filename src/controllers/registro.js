@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 
 const db = require('../lib/db.js');
 
+const moment = require('moment');
+
 function regidController(req, res) {
     
     const {regi_id} = req.params;
@@ -15,12 +17,13 @@ function regidController(req, res) {
             db.query(sql, (error, result) => {
                 if (error) throw error;
                 if (result.length > 0){
+                    console.log(result);
                     res.json(result);
                 }else{
                     res.status(404).send('Sin Resultados!!!');
-                }
+                };
             });
-        }        
+        } ;       
 
     });
 
@@ -51,12 +54,24 @@ function regController( req, res) {
 
                     const sql1 = 'INSERT INTO registro SET ?';
 
+                    const fechap = req.body.fechaPos;
+                    const fechar = req.body.fechaEnv;
+
+                    const fechaPosi = moment(fechap, 'YYYY-MM-DD HH:mm:ss', true).isValid();
+                    const fechaEnvi = moment(fechar, 'YYYY-MM-DD HH:mm:ss', true).isValid();
+
+                    if (fechaPosi && fechaEnvi == true){
+                        const pos= new Date(fechap).getTime();
+                        const env= new Date(fechar).getTime();
+                        // console.log(pos);
+                        // console.log(env);
+
                     const customerObj = {
 
                         regi_altitud: req.body.altitud,
                         regi_azimut: req.body.azimut,
-                        regi_fecha_posicion: req.body.fechaPos,
-                        regi_fecha_recibido: req.body.fechaEnv,
+                        regi_fecha_posicion: pos,
+                        regi_fecha_recibido: env,
                         regi_fix: req.body.fix,
                         regi_ignicion: req.body.ignicion,
                         regi_latitud: req.body.latitud,
@@ -78,9 +93,14 @@ function regController( req, res) {
                     };
 
                 db.query(sql1, customerObj, (error, result) => {
-                    console.log(customerObj);
+                    if (error) throw error;
+                    //console.log(customerObj);
                     res.status(200).send('Guardado correctamente !');
                 });
+                    }else{
+                        res.status(403).send('Error en formato');
+                    };
+
                     }else{
                         sql4 = 'INSERT INTO equipo SET ?';
 
@@ -92,12 +112,22 @@ function regController( req, res) {
 
                             const sql5 = 'INSERT INTO registro SET ?';
 
+                            const fechap1 = req.body.fechaPos;
+                            const fechar1 = req.body.fechaEnv;
+        
+                            const fechaPosi1 = moment(fechap1, 'YYYY-MM-DD HH:mm:ss', true).isValid();
+                            const fechaEnvi1 = moment(fechar1, 'YYYY-MM-DD HH:mm:ss', true).isValid();
+        
+                            if (fechaPosi1 && fechaEnvi1 == true){
+                                const pos1= new Date(fechap1).getTime();
+                                const env1= new Date(fechar1).getTime();
+
                             const customerObj = {
 
                                 regi_altitud: req.body.altitud,
                                 regi_azimut: req.body.azimut,
-                                regi_fecha_posicion: req.body.fechaPos,
-                                regi_fecha_recibido: req.body.fechaEnv,
+                                regi_fecha_posicion: pos1,
+                                regi_fecha_recibido: env1,
                                 regi_fix: req.body.fix,
                                 regi_ignicion: req.body.ignicion,
                                 regi_latitud: req.body.latitud,
@@ -119,9 +149,14 @@ function regController( req, res) {
                             };
 
                             db.query(sql5, customerObj, (error, result) => {
-                                console.log(customerObj);
+                                if (error) throw error;
+                                //console.log(customerObj);
                                 res.status(200).send('Guardado correctamente !');
                             });
+
+                        }else{
+                            res.status(400).send('Error en formato');
+                        };
 
 
                     };
