@@ -63,13 +63,17 @@ function regController( req, res) {
                     if (fechaPosi && fechaEnvi == true){
                         const pos= moment(fechap).unix();
                         const env= moment(fechar).unix();
-                        console.log(pos);
-                        console.log(env);
+                        // console.log(pos);
+                        // console.log(env);
+                        const refe= moment(new Date()).unix();
+                        // console.log(refe);
 
                     const customerObj = {
 
                         regi_altitud: req.body.altitud,
                         regi_azimut: req.body.azimut,
+                        regi_fecha: refe,
+                        regi_fecha_insercion: refe,
                         regi_fecha_posicion: pos,
                         regi_fecha_recibido: env,
                         regi_fix: req.body.fix,
@@ -121,11 +125,14 @@ function regController( req, res) {
                             if (fechaPosi1 && fechaEnvi1 == true){
                                 const pos1= moment(fechap1).unix();
                                 const env1= moment(fechar1).unix();
+                                const refe1= moment(new Date()).unix();
 
                             const customerObj = {
 
                                 regi_altitud: req.body.altitud,
                                 regi_azimut: req.body.azimut,
+                                regi_fecha: refe1,
+                                regi_fecha_insercion: refe1,
                                 regi_fecha_posicion: pos1,
                                 regi_fecha_recibido: env1,
                                 regi_fix: req.body.fix,

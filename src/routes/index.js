@@ -16,7 +16,7 @@ router.post('/login', (req, res) => {
             const token = jwt.sign({ usuario: result[0].usuario }, 'smvssmvs', { expiresIn: '365d' });
             res.json({ token });
         } else {
-            res.status(404).send('Sin Resultados!!!');
+            res.status(404).send('Usuario o contraseña erroneos!!!');
         };
     });
 });
