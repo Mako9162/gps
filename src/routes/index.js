@@ -7,6 +7,37 @@ const pass = require('../lib/jwt.js');
 const regi = require('../controllers/registro');
 const { rulesToMonitor } = require('nodemon/lib/monitor/match');
 
+router.post('/reg', (req, res) => {
+    const reg = {
+        
+        usuario: req.body.usuario,
+        password: req.body.password
+
+    };
+
+    const usu = reg.usuario;
+
+    const sqlu = `SELECT usuario FROM usuapi WHERE usuario= '${usu}'`;
+    
+    db.query(sqlu, (err, result) => {
+        if(!result.length){
+            const sql = 'INSERT INTO usuapi SET ?';
+            db.query(sql, reg, (err, result) => {
+                if(err){
+                    res.status(500).send('Error en el servidor');
+                }else{
+                    res.status(200).send('Usuario creado');
+                }
+            });
+
+        }else{
+            res.status(404).send('Usuario ya existe');
+        }
+    });
+ 
+    
+});
+
 router.post('/login', (req, res) => {
     const { usuario, password } = req.body;
     const sql = `SELECT * FROM usuapi WHERE usuario= '${usuario}' AND password= '${password}'`;
