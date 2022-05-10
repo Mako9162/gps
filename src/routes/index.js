@@ -8,6 +8,7 @@ const regi = require('../controllers/registro');
 const usuario = require('../controllers/usuario');
 const { rulesToMonitor } = require('nodemon/lib/monitor/match');
 
+
 // router.post('/login', (req, res) => {
 //     const user = {
 //         id: 1,
@@ -16,7 +17,7 @@ const { rulesToMonitor } = require('nodemon/lib/monitor/match');
 //     }
 
 //     jwt.sign({user: user}, 'smvssmvs', {expiresIn: '365d'}, (err, token) => {
-//         res.json({
+//         res.json({ 
 //             token,
 //         });
 //     });
@@ -27,10 +28,22 @@ router.post('/post', pass, (req, res) => {
         if(err){
             res.status(403).send('Token no valido');
         }else{
-            res.json({
-                message:"Token Valido",
-                authData
-            });
+            const {usuario, email} = authData;
+            sql = `SELECT * FROM usuapi WHERE usuario= '${usuario}' and est=1`;
+            db.query(sql, (err, result) => {
+                if(!result.length){
+                    res.status(404).send('Usuario Inactivo!!!');
+                }else{
+                    res.status(200).send('Usuario Activo!!!')
+                    // res.json({
+                    //     Mensaje: "Usuario Activo!!!",
+                    //     authData : {usuario,
+                    //                 email}
+                    // });
+                }
+            });            
+            
+            // console.log(usuario);
         }   
     });
 });
